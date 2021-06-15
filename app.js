@@ -47,7 +47,7 @@ async function getCoords(){
 }
 
 // get foursquare businesses
-async function getFourSquare(business) {
+async function getFoursquare(business) {
 	let clientId = '3J5YYNCNKZRXEAIRVG3SBTUIGGHSSZLSUYVGAL4IPG0EPA34'
 	let clentSecret = 'IPGTGUNL5IUETNNIQXNVXWQD2AB1QDIWZZY0B5UXB0NHPDQU'
 	let limit = 5
@@ -87,7 +87,7 @@ window.onload = async () => {
 document.getElementById('submit').addEventListener('click', async (event) => {
 	event.preventDefault()
 	let business = document.getElementById('business').value;
-	let data = await getFourSquare(business)
+	let data = await getFoursquare(business)
 	myMap.businesses = processBusinesses(data)
 	myMap.addMarkers()
 })
