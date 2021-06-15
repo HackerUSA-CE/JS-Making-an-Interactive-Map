@@ -26,16 +26,6 @@ const myMap = {
 	},
 
 	// add business markers
-	addMarkers() {
-		for (var i = 0; i < this.businesses.length; i++) {
-		this.markers = L.marker([
-			this.businesses[i].lat,
-			this.businesses[i].long,
-		])
-			.bindPopup(`<p1>${this.businesses[i].name}</p1>`)
-			.addTo(this.map)
-		}
-	},
 }
 
 // get coordinates via geolocation api
@@ -47,38 +37,15 @@ async function getCoords(){
 }
 
 // get foursquare businesses
-async function getFourSquare(business) {
-	let clientId = '3J5YYNCNKZRXEAIRVG3SBTUIGGHSSZLSUYVGAL4IPG0EPA34'
-	let clentSecret = 'IPGTGUNL5IUETNNIQXNVXWQD2AB1QDIWZZY0B5UXB0NHPDQU'
-	let limit = 5
-	let lat = myMap.coordinates[0]
-	let lon = myMap.coordinates[1]
-	let response = await fetch(
-		`https://api.foursquare.com/v2/venues/explore?client_id=${clientId}&client_secret=${clentSecret}&v=20180323&limit=${limit}&ll=${lat},${lon}&query=${business}`
-	);
-	let data = await response.text()
-	let parsedData = JSON.parse(data)
-	let businesses = parsedData.response.groups[0].items
-	return businesses
-}
 
 // process foursquare array
-function processBusinesses(data) {
-	let businesses = data.map((element) => {
-		let location = {
-		name: element.venue.name,
-		lat: element.venue.location.lat,
-		long: element.venue.location.lng,
-		};
-		return location
-	})
-	return businesses
-}
+
 
 // event handlers
 // window load
 window.onload = async () => {
 	const coords = await getCoords()
+	console.log(coords)
 	myMap.coordinates = coords
 	myMap.buildMap()
 }
@@ -86,8 +53,6 @@ window.onload = async () => {
 // business submit button
 document.getElementById('submit').addEventListener('click', async (event) => {
 	event.preventDefault()
-	let business = document.getElementById('business').value;
-	let data = await getFourSquare(business)
-	myMap.businesses = processBusinesses(data)
-	myMap.addMarkers()
+	let business = document.getElementById('business').value
+	console.log(business)
 })
