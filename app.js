@@ -39,12 +39,12 @@ const myMap = {
 }
 
 // get coordinates via geolocation api
-const getCoords = async () => {
+async function getCoords(){
 	const pos = await new Promise((resolve, reject) => {
 		navigator.geolocation.getCurrentPosition(resolve, reject)
 	});
 	return [pos.coords.latitude, pos.coords.longitude]
-};
+}
 
 // get foursquare businesses
 async function getFourSquare(business) {
