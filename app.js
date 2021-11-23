@@ -48,32 +48,35 @@ async function getCoords(){
 
 // get foursquare businesses
 async function getFoursquare(business) {
-	let clientId = '3J5YYNCNKZRXEAIRVG3SBTUIGGHSSZLSUYVGAL4IPG0EPA34'
-	let clentSecret = 'IPGTGUNL5IUETNNIQXNVXWQD2AB1QDIWZZY0B5UXB0NHPDQU'
+	const options = {
+		method: 'GET',
+		headers: {
+		Accept: 'application/json',
+		Authorization: 'fsq3ATzZbmcGhdeFafr73wZcnJ+LlN6bK+4dh19a7ClS4u8='
+		}
+	}
 	let limit = 5
 	let lat = myMap.coordinates[0]
 	let lon = myMap.coordinates[1]
-	let response = await fetch(
-		`https://api.foursquare.com/v2/venues/explore?client_id=${clientId}&client_secret=${clentSecret}&v=20180323&limit=${limit}&ll=${lat},${lon}&query=${business}`
-	);
+	let response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.foursquare.com/v3/places/search?&query=${business}&limit=${limit}&ll=${lat}%2C${lon}`, options)
 	let data = await response.text()
 	let parsedData = JSON.parse(data)
-	let businesses = parsedData.response.groups[0].items
+	let businesses = parsedData.results
 	return businesses
 }
-
 // process foursquare array
 function processBusinesses(data) {
 	let businesses = data.map((element) => {
 		let location = {
-		name: element.venue.name,
-		lat: element.venue.location.lat,
-		long: element.venue.location.lng,
+			name: element.name,
+			lat: element.geocodes.main.latitude,
+			long: element.geocodes.main.longitude
 		};
 		return location
 	})
 	return businesses
 }
+
 
 // event handlers
 // window load
@@ -86,7 +89,7 @@ window.onload = async () => {
 // business submit button
 document.getElementById('submit').addEventListener('click', async (event) => {
 	event.preventDefault()
-	let business = document.getElementById('business').value;
+	let business = document.getElementById('business').value
 	let data = await getFoursquare(business)
 	myMap.businesses = processBusinesses(data)
 	myMap.addMarkers()
